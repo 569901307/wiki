@@ -65,10 +65,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent,onMounted,ref,reactive,toRef} from 'vue';
+import { defineComponent,onMounted,ref} from 'vue';
 import axios from 'axios';
 
-const listData: Record<string, string>[] = [];
+/*const listData: Record<string, string>[] = [];
 
 for (let i = 0; i < 23; i++) {
     listData.push({
@@ -80,14 +80,14 @@ for (let i = 0; i < 23; i++) {
         content:
             'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
     });
-}
+}*/
 
 
 export default defineComponent({
   name: 'Home',
   setup(){
      const ebooks=ref();
-     const ebooks1=reactive({books:[]});
+    // const ebooks1=reactive({books:[]});
 
       const pagination = {
           onChange: (page: number) => {
@@ -102,17 +102,22 @@ export default defineComponent({
       ];
 
      onMounted(()=>{
-         axios.get("/ebook/list").then((response)=>{
+         axios.get("/ebook/list",{
+             params:{
+                 page:1,
+                 size:1000
+             }
+         }).then((response)=>{
              const data=response.data;
-             ebooks.value=data.content;
-             ebooks1.books=data.content;
+             ebooks.value=data.content.list;
+             //ebooks1.books=data.content;
 
          });
      });
       return{
          ebooks,
-         ebooks2:toRef(ebooks1,"books"),
-          listData,
+         //ebooks2:toRef(ebooks1,"books"),
+          //listData,
           pagination,
           actions,
       }
