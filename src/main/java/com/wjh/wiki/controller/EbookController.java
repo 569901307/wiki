@@ -1,13 +1,12 @@
 package com.wjh.wiki.controller;
 
-import com.wjh.wiki.req.EbookReq;
+import com.wjh.wiki.req.EbookQueryReq;
+import com.wjh.wiki.req.EbookSaveReq;
 import com.wjh.wiki.resp.CommonResp;
-import com.wjh.wiki.resp.EbookResp;
+import com.wjh.wiki.resp.EbookQueryResp;
 import com.wjh.wiki.resp.PageResp;
 import com.wjh.wiki.service.EbookService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -19,10 +18,17 @@ public class EbookController {
     private EbookService ebookService;
 
     @GetMapping("/list")
-    public CommonResp list(EbookReq req){
-        CommonResp<PageResp<EbookResp>> resp=new CommonResp<>();
-        PageResp<EbookResp> list=ebookService.list(req);
+    public CommonResp list(EbookQueryReq req){
+        CommonResp<PageResp<EbookQueryResp>> resp=new CommonResp<>();
+        PageResp<EbookQueryResp> list=ebookService.list(req);
         resp.setContent(list);
+        return resp;
+    }
+
+    @PostMapping("/save")
+    public CommonResp save(@RequestBody EbookSaveReq req){
+        CommonResp resp=new CommonResp<>();
+        ebookService.save(req);
         return resp;
     }
 

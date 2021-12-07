@@ -1,6 +1,6 @@
-package com.wjh.wiki.resp;
+package com.wjh.wiki.req;
 
-public class EbookResp {
+public class EbookSaveReq {
     private Long id;
 
     private String name;
