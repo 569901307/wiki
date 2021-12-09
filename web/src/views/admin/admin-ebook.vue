@@ -84,6 +84,8 @@
     import { defineComponent, onMounted, ref } from 'vue';
     import axios from 'axios';
     import { message } from 'ant-design-vue';
+    import {Tool} from "../../util/tools";
+
 
     export default defineComponent({
         name: 'AdminEbook',
@@ -183,7 +185,7 @@
             /*编辑按钮触发模态框可见*/
             const edit = (record:any) => {
                 modalVisible.value = true;
-                ebook.value=record
+                ebook.value=Tool.copy(record);
             };
             /*新增按钮*/
             const add = () => {
