@@ -1,6 +1,8 @@
 package com.wjh.wiki.req;
 
 public class EbookQueryReq extends PageReq{
+
+
     private Long id;
     private String name;
 
