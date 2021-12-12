@@ -139,13 +139,13 @@
                 loading.value = true;
                 axios.get("/category/all").then((response) => {
                     loading.value = false;
-                    const data = response.data;
+                    const data = response.data;  //data就是commonResp，response里面有很多内容data是其中之一
                     if (data.success) {
-                        categorys.value = data.content;
+                        categorys.value = data.content;  //[{..},{..},...]
                         console.log("原始数组：", categorys.value);
 
                         level1.value = [];
-                        level1.value = Tool.array2Tree(categorys.value, 0);
+                        level1.value = Tool.array2Tree(categorys.value, 0);  //递归算法  util里面的tool.ts
                         console.log("树形结构：", level1);
 
                     }else {
