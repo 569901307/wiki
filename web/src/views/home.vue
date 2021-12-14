@@ -118,7 +118,7 @@ export default defineComponent({
 
           });
       }
-      const handleClick = (value:any) => {
+      const handleClick = (value:any) => {    //value这个是提供的，里面可以看到点击的一系列信息
           //console.log("menu click", value)
           if (value.key === 'welcome') {    //下面那一句是简写这一段，和这一段一个意思
               isShowWelcome.value = true;
