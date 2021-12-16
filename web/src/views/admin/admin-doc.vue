@@ -85,13 +85,24 @@
     import axios from 'axios';
     import { message } from 'ant-design-vue';
     import {Tool} from "../../util/tools";
+    import {useRoute} from "vue-router";
 
-
+    /*上面的:replaceFields="{title: 'name', key: 'id', value: 'id'}"
+     下拉框的官网给的属性和自己的不一样，替换掉*/
     export default defineComponent({
         name: 'AdminDoc',
-        setup() {
-            const param=ref();
-            param.value={};
+        setup: function () {
+            const route = useRoute();
+            console.log("路由：", route);
+            console.log("route.path：", route.path);
+            console.log("route.query：", route.query);
+            console.log("route.param：", route.params);
+            console.log("route.fullPath：", route.fullPath);
+            console.log("route.name：", route.name);
+            console.log("route.meta：", route.meta);
+
+            const param = ref();
+            param.value = {};
             const docs = ref();
 
             const loading = ref(false);
@@ -113,7 +124,7 @@
                 {
                     title: 'Action',
                     key: 'action',
-                    slots: { customRender: 'action' }
+                    slots: {customRender: 'action'}
                 }
             ];
 
@@ -136,8 +147,8 @@
              **/
             const handleQuery = () => {
                 loading.value = true;
-                 // 如果不清空现有数据，则编辑保存重新加载数据后，再点编辑，则列表显示的还是编辑前的数据
-                  level1.value = [];
+                // 如果不清空现有数据，则编辑保存重新加载数据后，再点编辑，则列表显示的还是编辑前的数据
+                level1.value = [];
                 axios.get("/doc/all").then((response) => {
                     loading.value = false;
                     const data = response.data;  //data就是commonResp，response里面有很多内容data是其中之一
@@ -149,7 +160,7 @@
                         level1.value = Tool.array2Tree(docs.value, 0);  //递归算法  util里面的tool.ts
                         console.log("树形结构：", level1);
 
-                    }else {
+                    } else {
                         message.error(data.message);
                     }
 
@@ -157,10 +168,10 @@
             };
 
 
-             // 因为树选择组件的属性状态，会随当前编辑的节点而变化，所以单独声明一个响应式变量
+            // 因为树选择组件的属性状态，会随当前编辑的节点而变化，所以单独声明一个响应式变量
             const treeSelectData = ref();
             treeSelectData.value = [];
-            const doc=ref({});
+            const doc = ref({});
 
             /**
              * 将某节点及其子孙节点全部置为disabled
@@ -196,12 +207,12 @@
             const modalVisible = ref(false);
             const modalLoading = ref(false);
             /*编辑按钮触发模态框可见*/
-            const edit = (record:any) => {
+            const edit = (record: any) => {
                 modalVisible.value = true;
-                doc.value=Tool.copy(record);
+                doc.value = Tool.copy(record);
                 // 不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
-                 treeSelectData.value = Tool.copy(level1.value);
-                 setDisable(treeSelectData.value, record.id);
+                treeSelectData.value = Tool.copy(level1.value);
+                setDisable(treeSelectData.value, record.id);
 
                 // 为选择树添加一个"无"
                 treeSelectData.value.unshift({id: 0, name: '无'});
@@ -209,7 +220,9 @@
             /*新增按钮*/
             const add = () => {
                 modalVisible.value = true;
-                doc.value={};
+                doc.value = {
+                    ebookId: route.query.ebookId
+                };
                 treeSelectData.value = Tool.copy(level1.value);
                 // 为选择树添加一个"无"
                 treeSelectData.value.unshift({id: 0, name: '无'});
@@ -217,28 +230,28 @@
 
 
             /*删除按钮*/
-            const handleDelete = (id:number) => {
-                axios.delete("/doc/delete/"+id).then((response) => {
-                    const data=response.data;  //data=commonResp
-                    if (data.success){
+            const handleDelete = (id: number) => {
+                axios.delete("/doc/delete/" + id).then((response) => {
+                    const data = response.data;  //data=commonResp
+                    if (data.success) {
                         //重新加载列表
                         handleQuery();
                     }
                 });
             };
 
-           /*保存：点击ok后，两秒之后模态框和loading都不可见*/
+            /*保存：点击ok后，两秒之后模态框和loading都不可见*/
             const handleModalOk = () => {
                 modalLoading.value = true;
-                axios.post("/doc/save",doc.value).then((response) => {
+                axios.post("/doc/save", doc.value).then((response) => {
                     modalLoading.value = false;
-                    const data=response.data;
-                    if (data.success){
+                    const data = response.data;
+                    if (data.success) {
                         modalVisible.value = false;
 
                         //重新加载列表
                         handleQuery();
-                    }else {
+                    } else {
                         message.error(data.message);
                     }
                 });
