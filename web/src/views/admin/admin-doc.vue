@@ -258,7 +258,7 @@
                 }
             };
             /*编辑按钮模态框的功能*/
-            const modalVisible = ref(false);
+            //const modalVisible = ref(false);
             const modalLoading = ref(false);
             const editor = new E('#content');
             editor.config.zIndex = 0;
@@ -278,7 +278,9 @@
             };
             /*编辑按钮触发模态框可见*/
             const edit = (record: any) => {
-                modalVisible.value = true;
+                // 清空富文本框
+                editor.txt.html("");
+                //modalVisible.value = true;
                 doc.value = Tool.copy(record);
                 handleQueryContent();
                 // 不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
@@ -291,7 +293,9 @@
             };
             /*新增按钮*/
             const add = () => {
-                modalVisible.value = true;
+                // 清空富文本框
+                editor.txt.html("");
+                //modalVisible.value = true;
                 doc.value = {
                     ebookId: route.query.ebookId
                 };
@@ -326,7 +330,7 @@
                 });
             };
 
-            /*保存：点击ok后，两秒之后模态框和loading都不可见*/
+            /*保存*/
             const handleSave  = () => {
                 modalLoading.value = true;
                 doc.value.content = editor.txt.html();
@@ -334,8 +338,8 @@
                     modalLoading.value = false;
                     const data = response.data;
                     if (data.success) {
-                        modalVisible.value = false;
-
+                        //modalVisible.value = false;
+                        message.success("保存成功！");
                         //重新加载列表
                         handleQuery();
                     } else {
@@ -359,7 +363,7 @@
 
                 edit,
                 add,
-                modalVisible,
+                //modalVisible,
                 modalLoading,
                 handleSave,
                 doc,
