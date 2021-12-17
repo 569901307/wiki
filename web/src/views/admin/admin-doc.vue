@@ -187,7 +187,8 @@
             // 因为树选择组件的属性状态，会随当前编辑的节点而变化，所以单独声明一个响应式变量
             const treeSelectData = ref();
             treeSelectData.value = [];
-            const doc = ref({});
+            const doc = ref();
+            doc.value={};
 
 
             /**
@@ -313,6 +314,7 @@
             /*保存：点击ok后，两秒之后模态框和loading都不可见*/
             const handleSave  = () => {
                 modalLoading.value = true;
+                doc.value.content = editor.txt.html();
                 axios.post("/doc/save", doc.value).then((response) => {
                     modalLoading.value = false;
                     const data = response.data;
