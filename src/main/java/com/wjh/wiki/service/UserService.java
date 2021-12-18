@@ -97,10 +97,10 @@ public class UserService {
     }
 
 
-    public User selectByLoginName(String LoginName) {
+    public User selectByLoginName(String loginName) {
         UserExample userExample = new UserExample();
         UserExample.Criteria criteria = userExample.createCriteria();
-        criteria.andLoginNameEqualTo(LoginName);
+        criteria.andLoginNameEqualTo(loginName);
         List<User> userList = userMapper.selectByExample(userExample);
         if (CollectionUtils.isEmpty(userList)) {
             return null;
