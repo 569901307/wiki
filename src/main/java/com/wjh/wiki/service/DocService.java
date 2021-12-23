@@ -7,6 +7,7 @@ import com.wjh.wiki.domain.Doc;
 import com.wjh.wiki.domain.DocExample;
 import com.wjh.wiki.mapper.ContentMapper;
 import com.wjh.wiki.mapper.DocMapper;
+import com.wjh.wiki.mapper.DocMapperCust;
 import com.wjh.wiki.req.DocQueryReq;
 import com.wjh.wiki.req.DocSaveReq;
 import com.wjh.wiki.resp.DocQueryResp;
@@ -27,6 +28,9 @@ public class DocService {
     private static final Logger LOG = LoggerFactory.getLogger(DocService.class);
     @Resource
     private DocMapper docMapper;
+
+    @Resource
+    private DocMapperCust docMapperCust;
 
     @Resource
     private ContentMapper contentMapper;
@@ -88,7 +92,8 @@ public class DocService {
         if (ObjectUtils.isEmpty(req.getId())){
             //新增
             doc.setId(snowFlake.nextId());
-
+            doc.setViewCount(0);
+            doc.setVoteCount(0);
             docMapper.insert(doc);
 
             content.setId(doc.getId());
@@ -117,6 +122,9 @@ public class DocService {
     }
 
     public String findContent(Long id){
+        // 文档阅读数+1
+        docMapperCust.increaseViewCount(id);
+
         Content content=contentMapper.selectByPrimaryKey(id);
         if (ObjectUtils.isEmpty(content)) {
             return "";
