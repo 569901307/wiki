@@ -77,7 +77,7 @@ public class UserController {
         LOG.info("生成单点登录token：{}，并放入redis中", token);
         userLoginResp.setToken(token.toString());   //原本response里面新增一个token属性，这里给它带入值，然后返回到前端
         //token为key,用户信息为value保存到redis中
-        redisTemplate.opsForValue().set(token, JSONObject.toJSONString(userLoginResp), 3600 * 24, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(token.toString(), JSONObject.toJSONString(userLoginResp), 3600 * 24, TimeUnit.SECONDS);
 
         resp.setContent(userLoginResp);
         return resp;
