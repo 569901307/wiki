@@ -18,6 +18,7 @@ import com.wjh.wiki.util.CopyUtil;
 import com.wjh.wiki.util.RedisUtil;
 import com.wjh.wiki.util.RequestContext;
 import com.wjh.wiki.util.SnowFlake;
+import com.wjh.wiki.websocket.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,9 @@ public class DocService {
 
     @Resource
     public RedisUtil redisUtil;
+
+    @Resource
+    public WebSocketServer webSocketServer;
 
     @Resource
     private DocMapperCust docMapperCust;
@@ -152,6 +156,10 @@ public class DocService {
                } else {
                        throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
                }
+
+        // 推送消息
+               Doc docDb = docMapper.selectByPrimaryKey(id);
+               webSocketServer.sendInfo("【" + docDb.getName() + "】被点赞！");
     }
 
 
